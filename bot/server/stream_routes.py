@@ -127,15 +127,6 @@ async def get_thumbnail(request):
     response.content_type = "image/jpeg"
     return response
 
-# @routes.get("/static/{file}")
-# async def static_files(request):
-#     tpath = ospath.join('bot', 'server', 'static')
-#     file_path = ospath.join(tpath, request.match_info['file'])
-#     if ospath.isfile(file_path):
-#         return web.FileResponse(file_path)
-#     else:
-#         return web.Response(status=404)
-
 @routes.get('/watch/{chat_id}', allow_head=True)
 async def stream_handler_watch(request: web.Request):
     session = await get_session(request)
@@ -161,26 +152,20 @@ async def stream_handler_watch(request: web.Request):
 
 @routes.get('/{chat_id}', allow_head=True)
 async def stream_handler(request: web.Request):
-    session = await get_session(request)
-    username = session.get('user')
-    if username:
-        try:
-            chat_id = request.match_info['chat_id']
-            message_id = request.query.get('id')
-            secure_hash = request.query.get('hash')
-            return await media_streamer(request, int(chat_id), int(message_id), secure_hash)
-        except InvalidHash as e:
-            raise web.HTTPForbidden(text=e.message)
-        except FIleNotFound as e:
-            raise web.HTTPNotFound(text=e.message)
-        except (AttributeError, BadStatusLine, ConnectionResetError):
-            pass
-        except Exception as e:
-            logging.critical(e.with_traceback(None))
-            raise web.HTTPInternalServerError(text=str(e))
-    else:
-        session['redirect_url'] = request.path_qs
-        return web.HTTPFound('/login')
+    try:
+        chat_id = request.match_info['chat_id']
+        message_id = request.query.get('id')
+        secure_hash = request.query.get('hash')
+        return await media_streamer(request, int(chat_id), int(message_id), secure_hash)
+    except InvalidHash as e:
+        raise web.HTTPForbidden(text=e.message)
+    except FIleNotFound as e:
+        raise web.HTTPNotFound(text=e.message)
+    except (AttributeError, BadStatusLine, ConnectionResetError):
+        pass
+    except Exception as e:
+        logging.critical(e.with_traceback(None))
+        raise web.HTTPInternalServerError(text=str(e))
 
 
 class_cache = {}

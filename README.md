@@ -30,6 +30,17 @@
 - Database Support 💾
 - Playlist Creator Support 📀
 
+## Screenshots
+
+<div style="overflow-x: auto; white-space: nowrap;">
+  <img src="https://graph.org/file/67c1500ecd0b9eb3a5700.png" style="width: 400px; display: inline-block; margin-right: 10px;" />
+  <img src="https://graph.org/file/be9d123ccc341d43431ef.png" style="width: 400px; display: inline-block; margin-right: 10px;" />
+  <img src="https://graph.org/file/29fd699758d8ce2da9aff.png" style="width: 400px; display: inline-block; margin-right: 10px;" />
+  <img src="https://graph.org/file/5ace6162fd95c1f9432fa.png" style="width: 400px; display: inline-block; margin-right: 10px;" />
+</div>
+
+
+
 ## Setting Up Environment Variables
 
 To run this Surf-TG, you will need to add the following environment variables to your config.env file.
@@ -138,7 +149,7 @@ python3 -m bot
 * Clone the Repository:
 ```sh
 git clone https://github.com/weebzone/Surf-TG
-cd Suf-TG
+cd Surf-TG
 ```
 - Start Docker daemon (SKIP if already running, mostly you don't need to do this):
 ```sh
