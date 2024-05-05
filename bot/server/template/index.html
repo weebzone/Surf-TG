@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="https://cdn.jsdelivr.net/gh/weebzone/weebzone/data/Surf-TG/src/ico.png" type="image/x-icon">
+    <link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/weebzone/weebzone/data/Surf-TG/src/ico.png" type="image/x-icon">
+    <title>Surf-TG: <!-- Title --> </title>
+    <link rel="stylesheet" href="https://bootswatch.com/5/<!-- Theme -->/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body {
+            height: 100vh;
+            margin: 0;
+            justify-content: center;
+            align-items: center;
+
+        }
+
+        .container {
+            margin: auto;
+            padding: 0px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+            align-items: flex-start;
+        }
+
+        .content {
+            padding: 2px;
+            transition: all 0.3s;
+            overflow: hidden;
+            flex: 0 0 calc(20% - 20px);
+            margin: 10px;
+            border-radius: 4%;
+
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        .img {
+            width: 100%;
+            height: auto;
+            border-radius: 4%;
+        }
+
+
+
+        .content:hover {
+            transform: scale(1.10);
+        }
+
+        .logoutdiv {
+            margin-right: 12px;
+        }
+
+
+        /* For WebKit browsers (Chrome, Safari, etc.) */
+        /* Track */
+        ::-webkit-scrollbar {
+            width: 5px;
+            /* Set the width of the scrollbar */
+        }
+
+        /* Handle */
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            /* Color of the scrollbar handle */
+        }
+
+        /* Handle on hover */
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+            /* Color of the scrollbar handle on hover */
+        }
+
+
+
+
+        @media (max-width: 1200px) {
+            .content {
+                flex: 0 0 calc(20% - 20px);
+            }
+        }
+
+        @media (max-width: 992px) {
+            .content {
+                flex: 0 0 calc(33% - 20px);
+            }
+
+            .navbar {
+                padding-right: 15px;
+                padding-left: 15px;
+            }
+
+            .navbar-collapse {
+                padding-right: 0;
+                padding-left: 0;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .content {
+                flex: 0 0 calc(50% - 20px);
+                ;
+            }
+
+            .navbar {
+                padding-right: 15px;
+                padding-left: 15px;
+            }
+
+            .navbar-collapse {
+                padding-right: 0;
+                padding-left: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark" style="margin-bottom: 1rem; padding: 10px;">
+        <div class="container">
+            <a class="navbar-brand" style="border: 0px;" href="/">
+                <img src="https://cdn.jsdelivr.net/gh/weebzone/weebzone/data/Surf-TG/src/logo.png" alt="Logo" height="45">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <form class="d-flex ms-auto" action="/search/<!-- Chat_id -->" method="get">
+                    <input class="form-control me-sm-2" type="search" placeholder="Search" name="q">
+                    <button class="btn btn-secondary my-sm-0" type="submit">Search</button>
+                </form>
+            </div>
+        </div>
+        <div class="logoutdiv">
+            <form id="signoutForm" action="/logout" method="post">
+                <button type="submit" class="btn btn-primary"><i class="bi bi-box-arrow-left"></i> Logout</button>
+            </form>
+        </div>
+    </nav>
+    <div class="card bg-light mb-3" style="width: fit-content;; margin: auto;">
+        <div class="card-header"><!-- Title --></div>
+    </div>
+    <div class="container">
+        <!-- Print -->
+    </div>
+    <div class="container  justify-content-center">
+        <div>
+            <ul class="pagination">
+                <li class="page-item">
+                    <a class="page-link" id="prevButton" href="#">Previous</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" id="nextButton" href="#">Next</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <footer class="footer mt-auto py-3 text-muted" style="color: white;">
+        <div class="container d-flex justify-content-center align-items-center" style="width: 100%; padding: 0 10px;">
+            <p class="float-end">
+            <p>Made with <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-heart-fill" fill="red"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd"
+                        d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z" />
+                </svg> by <a href="https://github.com/weebzone" target="_blank">Karan Adhikari</a>
+        </div>
+    </footer>
+</body>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let lazyImages = document.querySelectorAll('.lzy_img');
+        let imageObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    let img = entry.target;
+                    img.src = img.dataset.src;
+                    observer.unobserve(img);
+                }
+            });
+        });
+        lazyImages.forEach(image => {
+            imageObserver.observe(image);
+        });
+    });
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const prevButton = document.getElementById("prevButton");
+        const nextButton = document.getElementById("nextButton");
+
+        const url = new URL(window.location.href);
+        const chatId = url.pathname.match(/\/channel\/(-?\d+)/) ? url.pathname.match(/\/channel\/(-?\d+)/)[1] : null;
+        const currentPage = url.searchParams.get("page") ? parseInt(url.searchParams.get("page")) : 1;
+
+        prevButton.addEventListener("click", function () {
+            if (currentPage > 1) {
+                navigateChannel(url.origin + url.pathname, currentPage - 1);
+            } else {
+                prevButton.classList.add("disabled");
+            }
+        });
+
+        nextButton.addEventListener("click", function () {
+            navigateChannel(url.origin + url.pathname, currentPage + 1);
+        });
+    });
+
+    function navigateChannel(url, page) {
+        const match = url.match(/\/(channel|search)\/(-?\d+)/);
+        const chatId = match ? match[2] : null;
+
+        if (!chatId) {
+            alert("Invalid channel URL. Please provide a URL like http://127.0.0.1:8000/channel/-1001767698380");
+            return;
+        }
+
+        const searchParams = new URLSearchParams(window.location.search);
+        const searchQuery = searchParams.get('q');
+        page = parseInt(page) || 1;
+
+        let newUrl = url;
+        if (searchQuery || page > 1) {
+            newUrl += searchQuery ? `?q=${searchQuery}` : '';
+            newUrl += page > 1 ? `${searchQuery ? '&' : '?'}page=${page}` : '';
+        }
+
+        window.location.href = newUrl;
+    }
+
+
+</script>
+<script>
+    
+document.addEventListener("contextmenu", function (e) {
+    e.preventDefault();
+});
+document.addEventListener('keydown', function (e) {
+    if (
+        e.key === 'F12' ||
+        (e.ctrlKey && e.shiftKey && e.key === 'I') ||
+        (e.ctrlKey && e.key === 'u') ||
+        e.ctrlKey ||
+        e.shiftKey ||
+        e.altKey
+    ) {
+        e.preventDefault();
+    }
+});
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8"
+    crossorigin="anonymous"></script>
+
+</html>

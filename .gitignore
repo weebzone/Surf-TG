@@ -1,0 +1,8 @@
+.venv
+log.txt
+config.env
+**/__pycache__/
+*.session
+*.session-journal
+*.session-shm
+*.session-wal
