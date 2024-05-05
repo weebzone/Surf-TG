@@ -32,13 +32,15 @@
 
 ## Screenshots
 
+Demo Url https://surftg-d5bc40cb110d.herokuapp.com/
+<br>(username: admin | password: admin)
+
 <div style="overflow-x: auto; white-space: nowrap;">
   <img src="https://graph.org/file/67c1500ecd0b9eb3a5700.png" style="width: 400px; display: inline-block; margin-right: 10px;" />
   <img src="https://graph.org/file/be9d123ccc341d43431ef.png" style="width: 400px; display: inline-block; margin-right: 10px;" />
   <img src="https://graph.org/file/29fd699758d8ce2da9aff.png" style="width: 400px; display: inline-block; margin-right: 10px;" />
   <img src="https://graph.org/file/5ace6162fd95c1f9432fa.png" style="width: 400px; display: inline-block; margin-right: 10px;" />
 </div>
-
 
 
 ## Setting Up Environment Variables
@@ -109,7 +111,7 @@ you may also add as many as bots you want. (max limit is 50)
 > [!NOTE]
 > **Make Sure that you have to Generate the `Pyrogram Session String`**
 
-To generate the Session String use this [Colab Tool](https://colab.research.google.com/drive/1wjYvtwUo5zDsUvukyafAR9Of-2NYkKsu)
+To generate the Session String use this [Colab Tool](https://colab.research.google.com/drive/1u4F2CtYU_Q3_rWfjYtt1IvRJfNKmBKyM)
 
 
 ## Deployment

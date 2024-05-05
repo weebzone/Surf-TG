@@ -1,5 +1,6 @@
 import asyncio
 import logging
+import traceback
 from aiohttp import web
 from bot.config import Telegram
 from bot.server import web_server
@@ -52,8 +53,20 @@ async def start_services():
     print("------------------------------ DONE ------------------------------")
     await idle()
 
+
+async def cleanup():
+    await StreamBot.stop()
+    await asyncio.sleep(2)
+    await UserBot.stop()
+
 if __name__ == '__main__':
     try:
         loop.run_until_complete(start_services())
     except KeyboardInterrupt:
-        logging.info('----------------------- Service Stopped -----------------------')
+        logging.info('----------------------- Service Stopping -----------------------')
+    except Exception as err:
+        logging.error(traceback.format_exc())
+    finally:
+        loop.run_until_complete(cleanup())
+        loop.stop()
+        print("------------------------ Done ------------------------")

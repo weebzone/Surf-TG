@@ -17,8 +17,8 @@ UserBot = Client(
     api_hash=Telegram.API_HASH,
     session_string=Telegram.SESSION_STRING,
     sleep_threshold=Telegram.SLEEP_THRESHOLD,
-    workers=Telegram.WORKERS,
-    max_concurrent_transmissions=1000
+    no_updates=True,
+    in_memory=True,
 )
 
 
