@@ -1,5 +1,5 @@
 from aiohttp.web import Application
-from cryptography.fernet import Fernet, 
+from cryptography.fernet import Fernet
 from aiohttp_session import setup
 from aiohttp_session.cookie_storage import EncryptedCookieStorage
 
