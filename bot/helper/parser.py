@@ -1,13 +1,11 @@
 from os import environ
-from typing import Dict, Optional
-
 
 class TokenParser:
-    def __init__(self, config_file: Optional[str] = None):
+    def __init__(self, config_file = None):
         self.tokens = {}
         self.config_file = config_file
 
-    def parse_from_env(self) -> Dict[int, str]:
+    def parse_from_env(self):
         self.tokens = dict(
             (c + 1, t)
             for c, (_, t) in enumerate(

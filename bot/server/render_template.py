@@ -1,6 +1,7 @@
-import logging
 from aiofiles import open as aiopen
 from os import path as ospath
+
+from bot import LOGGER
 from bot.config import Telegram
 from bot.helper.exceptions import InvalidHash
 from bot.helper.file_size import get_readable_file_size
@@ -22,12 +23,10 @@ async def render_page(message_id, secure_hash, is_home=False, is_index=False, is
     else:
         file_data = await get_file_ids(StreamBot, chat_id=int(chat_id), message_id=int(message_id))
         if file_data.unique_id[:6] != secure_hash:
-            logging.info('Link hash: %s - %s', secure_hash,
-                         file_data.unique_id[:6])
-            logging.info('Invalid hash for message with - ID %s', message_id)
+            LOGGER.info('Link hash: %s - %s', secure_hash, file_data.unique_id[:6])
+            LOGGER.info('Invalid hash for message with - ID %s', message_id)
             raise InvalidHash
-        filename, tag, size = file_data.file_name, file_data.mime_type.split(
-            '/')[0].strip(), get_readable_file_size(file_data.file_size)
+        filename, tag, size = file_data.file_name, file_data.mime_type.split('/')[0].strip(), get_readable_file_size(file_data.file_size)
         if tag == 'video':
             async with aiopen(ospath.join(tpath, 'video.html')) as r:
                 poster = f"/api/thumb/{chat_id}?id={message_id}"

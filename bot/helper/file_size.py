@@ -1,12 +1,9 @@
-SIZE_UNITS = ['B', 'KB', 'MB', 'GB', 'TB', 'PB']
-
-
-def get_readable_file_size(size_in_bytes: int | str):
-    if isinstance(size_in_bytes, str):
-        size_in_bytes = int(size_in_bytes)
+def get_readable_file_size(size_in_bytes):
+    size_in_bytes = int(size_in_bytes) if size_in_bytes.isdigit() else 0
     if not size_in_bytes:
         return '0B'
-    index = 0
+    index, SIZE_UNITS = 0, ['B', 'KB', 'MB', 'GB', 'TB', 'PB']
+    
     while size_in_bytes >= 1024 and index < len(SIZE_UNITS) - 1:
         size_in_bytes /= 1024
         index += 1

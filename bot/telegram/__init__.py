@@ -1,7 +1,6 @@
 from pyrogram import Client
 from bot.config import Telegram
 
-
 StreamBot = Client(
     name='bot',
     api_id=Telegram.API_ID,

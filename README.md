@@ -1,6 +1,6 @@
 <div align="center">
-    <img src="https://cdn.jsdelivr.net/gh/weebzone/weebzone/data/Surf-TG/src/logo.png" alt="Surf_TG" style="height:10%; width:40%;">
-    <h3>Python Web App which Indexes a Your Telegram Channel and Serves its Files for Download and Stream.</h3>
+    <img src="https://cdn.jsdelivr.net/gh/weebzone/weebzone/data/Surf-TG/src/logo.png" alt="Surf_TG" style="height:20%; width:50%;">
+    <i>Python Web App which Indexes a Your Telegram Channel and Serves its Files for Download and Stream.</i>
 </div>
 
 
@@ -14,26 +14,27 @@
 
 
 
-## Features 📑
+## ***Features*** 📑
 
 - Multi Channel Index 📡
-- Thumbnail Support 🖼️
+- Thumbnail Support (Channel Profile) 🖼️
 - Search Support 🔍
 - Login support 🔐
 - Faster Resumeable Download Link ⏩
 - Stream Video Support 📺
-- 25 Website Theme (Bootswatch) 🎨
+- 25 Website Themes (Bootswatch) 🎨
 
-### To-Do
+### ***To-Do*** 📦
 
-- API Support 🛠️
-- Database Support 💾
-- Playlist Creator Support 📀
+- [ ] API Support 🛠️
+- [ ] Database Support 💾
+- [ ] Playlist Creator Support 📀
 
-## Screenshots
+## ***Website Screenshots*** 🌐
 
-Demo Url https://surftg-d5bc40cb110d.herokuapp.com/
-<br>(username: admin | password: admin)
+- **Demo Url:** https://surftg-d5bc40cb110d.herokuapp.com/
+- **Username:** admin 
+- **Password:** admin
 
 <div style="overflow-x: auto; white-space: nowrap;">
   <img src="https://graph.org/file/67c1500ecd0b9eb3a5700.png" style="width: 400px; display: inline-block; margin-right: 10px;" />
@@ -43,7 +44,7 @@ Demo Url https://surftg-d5bc40cb110d.herokuapp.com/
 </div>
 
 
-## Setting Up Environment Variables
+## ***Environment Variables*** 🪧
 
 To run this Surf-TG, you will need to add the following environment variables to your config.env file.
 
@@ -63,28 +64,28 @@ To run this Surf-TG, you will need to add the following environment variables to
 | `PASSWORD` | default  password is `admin`. `str`
 | `SLEEP_THRESHOLD` | Set a sleep threshold for flood wait exceptions, defaut is `60`. `int`
 | `WORKERS` | Number of maximum concurrent workers for handling incoming updates, default is `10`. `int`
-| `MULTI_CLIENT` | Enable multi bot token for handing incoming updates, default is `False`. `bool`
+| `MULTI_TOKEN*` | Multi bot token for handing incoming updates. (*)asterisk represents any interger starting from 1. `str`
 | `THEME` | Choose any Bootswatch theme for UI, Default is `flatly`. `str`
 
 
-### Themes
+## ***Themes*** 🎨
 
 * There are 25 Themes from [bootswatch](https://github.com/thomaspark/bootswatch) official [Bootstrap](https://getbootstrap.com) Themes.
 * You can check Theme from [bootswatch.com](https://bootswatch.com) before selecting.
 * To Change theme, Set Appropriate Theme name in `Theme` Variable.
 
-| Themes    |         |         |         |        |          |
-|-----------|---------|---------|---------|--------|----------|
+| **Themes**|         |         |         |        |          |
+|:---------:|:-------:|:-------:|:-------:|:------:|:--------:|
 | cerulean  | cosmo   | cyborg  | darkly  | flatly | journal  |
 | litera    | lumen   | lux     | materia | minty  | pulse    |
 | sandstone | simplex | sketchy | slate   | solar  | spacelab |
 | superhero | united  | yeti    | vapor   | morph  | quartz   |    
 | zephyr    |
 
-### Use Multiple Bots to speed up
+### ***Multiple Bots*** 🚀 (Speed Booster)
 
 > [!NOTE]
-> **What it multi-client feature and what it does?** <br>
+> **What it multi-client feature and what it does?** <br><br>
 > This feature shares the Telegram API requests between worker bots to speed up download speed when many users are using the server and to avoid the flood limits that are set by Telegram. <br>
 
 > [!NOTE]
@@ -93,7 +94,6 @@ To run this Surf-TG, you will need to add the following environment variables to
 To enable multi-client, generate new bot tokens and add it as your `config.env` with the following key names. 
 
 `MULTI_TOKEN1`: Add your first bot token here.
-
 `MULTI_TOKEN2`: Add your second bot token here.
 
 you may also add as many as bots you want. (max limit is 50)
@@ -105,7 +105,7 @@ you may also add as many as bots you want. (max limit is 50)
 ### Generate Session String 
 
 > [!NOTE]
-> **Why Session String is needed?** <br>
+> **Why Session String is needed?** <br><br>
 > The session string is required to fetch files from the `AUTH_CHANNEL` due to a restriction in the Telegram API. Only users are allowed to fetch files from channels; bots cannot do so.
 
 > [!NOTE]
@@ -119,10 +119,7 @@ To generate the Session String use this [Colab Tool](https://colab.research.goog
 <i>Either you could locally host, VPS, or deploy on [Heroku](https://heroku.com)</i>
 
 
-
-
 ### Deploy Locally:
-
 
 ```sh
 git clone https://github.com/weebzone/Surf-TG
@@ -188,13 +185,13 @@ Feel free to contribute to this project if you have any further ideas
 
 - [@TechShreyash](https://github.com/TechShreyash) for [TechZIndex](https://github.com/TechShreyash/TechZIndex) Base repo
 
-## Contact me
+## **Contact Info**
 
-[![Telegram Username](https://img.shields.io/static/v1?label=&message=Telegram%20&color=blueviolet&style=for-the-badge&logo=telegram&logoColor=violet)](https://t.me/krn_adhikari)
+[![Telegram Username](https://img.shields.io/static/v1?label=&message=Telegram%20&color=blueviolet&style=for-the-badge&logo=telegram&logoColor=black)](https://t.me/krn_adhikari)
 
-## Copyright
+## **Copyright** ©️ 
 
-Copyright (C) 2024 [Weebzone](https://github.com/weebzone) under [GNU Affero General Public License](https://www.gnu.org/licenses/agpl-3.0.en.html).
+Copyright (C) 2024-present [Weebzone](https://github.com/weebzone) under [GNU Affero General Public License](https://www.gnu.org/licenses/agpl-3.0.en.html).
 
 Surf-TG is Free Software: You can use, study share and improve it at your
 will. Specifically you can redistribute and/or modify it under the terms of the
