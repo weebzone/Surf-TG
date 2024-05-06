@@ -1,5 +1,5 @@
 def get_readable_file_size(size_in_bytes):
-    size_in_bytes = int(size_in_bytes) if size_in_bytes.isdigit() else 0
+    size_in_bytes = int(size_in_bytes) if str(size_in_bytes).isdigit() else 0
     if not size_in_bytes:
         return '0B'
     index, SIZE_UNITS = 0, ['B', 'KB', 'MB', 'GB', 'TB', 'PB']

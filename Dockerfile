@@ -6,4 +6,4 @@ COPY . /app
 RUN pip install -U pip uv
 RUN uv pip install --system --no-cache-dir -r requirements.txt
 
-CMD ["python", "-m", "bot"]
+CMD ["bash", "surf-tg.sh"]

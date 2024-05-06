@@ -1,5 +1,5 @@
 <div align="center">
-    <img src="https://cdn.jsdelivr.net/gh/weebzone/weebzone/data/Surf-TG/src/logo.png" alt="Surf_TG" style="height:20%; width:50%;">
+    <img src="https://cdn.jsdelivr.net/gh/weebzone/weebzone/data/Surf-TG/src/logo.png" alt="Surf_TG" style="height:20%; width:50%;"><br>
     <i>Python Web App which Indexes a Your Telegram Channel and Serves its Files for Download and Stream.</i>
 </div>
 
