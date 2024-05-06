@@ -13,33 +13,31 @@ from bot.telegram.clients import initialize_clients
 loop = get_event_loop()
 
 async def start_services():
-    print(f'Initializing Surf-TG v-{__version__}')
+    LOGGER.info(f'Initializing Surf-TG v-{__version__}')
     await asleep(1.2)
     
     await gather(StreamBot.start(), UserBot.start())
     StreamBot.username = StreamBot.me.username
-    print(f"Bot Client : {StreamBot.username}")
+    LOGGER.info(f"Bot Client : {StreamBot.username}")
     UserBot.username = UserBot.me.username or UserBot.me.first_name or UserBot.me.id
-    print(f"User Client : {UserBot.username}")
+    LOGGER.info(f"User Client : {UserBot.username}")
     
     await asleep(1.2)
-    print("Initializing Multi Clients")
+    LOGGER.info("Initializing Multi Clients")
     await initialize_clients()
-    print("DONE")
     
     await asleep(2)
-    print('Initalizing Surf Web Server')
+    LOGGER.info('Initalizing Surf Web Server..')
     server = web.AppRunner(await web_server())
-    print("Server CleanUp")
+    LOGGER.info("Server CleanUp!")
     await server.cleanup()
     
-    await asyncio.sleep(2)
-    print("Server Setup")
+    await asleep(2)
+    LOGGER.info("Server Setup Started !")
     
     await server.setup()
     await web.TCPSite(server, '0.0.0.0', Telegram.PORT).start()
-    print("------------------------------ DONE ------------------------------")
-    
+
     await idle()
 
 async def stop_clients():
@@ -49,10 +47,9 @@ if __name__ == '__main__':
     try:
         loop.run_until_complete(start_services())
     except KeyboardInterrupt:
-        LOGGER.info('----------------------- Service Stopping -----------------------')
+        LOGGER.info('Service Stopping...')
     except Exception as err:
         LOGGER.error(format_exc())
     finally:
         loop.run_until_complete(stop_clients())
         loop.stop()
-        print("------------------------ Done ------------------------")
