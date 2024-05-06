@@ -15,7 +15,7 @@ basicConfig(
 )
 load_dotenv('config.env', override=True)
 
-UPSTREAM_REPO = getenv('UPSTREAM_REPO', "https://github.com/weebzone/Surf-TG")
+UPSTREAM_REPO = getenv('UPSTREAM_REPO', "https://github.com/babupakkakivellu/Surf-TG")
 UPSTREAM_BRANCH = getenv('UPSTREAM_BRANCH', "main")
 
 if UPSTREAM_REPO is not None:
