@@ -1,4 +1,4 @@
-from asyncio import get_event_loop, sleep as asleep, gather
+from asyncio import get_event_loop, sleep as asleep, gather, create_task
 from traceback import format_exc
 
 from aiohttp import web
@@ -24,9 +24,7 @@ async def start_services():
     await asleep(1.2)
     LOGGER.info("Initializing Multi Clients")
     await initialize_clients()
-    await asleep(2)
-    LOGGER.info("Start initial indexing. It will take time depending on the number of files in the channel.")
-    await indexing()
+
     await asleep(2)
     LOGGER.info('Initalizing Surf Web Server..')
     server = web.AppRunner(await web_server())
@@ -38,6 +36,14 @@ async def start_services():
 
     await server.setup()
     await web.TCPSite(server, '0.0.0.0', Telegram.PORT).start()
+    await asleep(2)
+    LOGGER.info("Start initial indexing. It will take time depending on the number of files in each channel.")
+
+    tasks = [create_task(indexing(channel_id)) for channel_id in Telegram.AUTH_CHANNEL]
+    await gather(*tasks)
+
+    await asleep(2)
+    LOGGER.info("Done You are ready to use the Surf-TG !")
 
     await idle()
 
