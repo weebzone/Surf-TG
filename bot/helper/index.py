@@ -2,7 +2,7 @@ import json
 from os.path import splitext
 from bot.helper.database import Database
 from bot.telegram import StreamBot
-from bot.helper.file_size import get_readable_file_size
+from bot.helper.utils import get_readable_file_size
 
 db = Database()
 
@@ -38,7 +38,6 @@ async def get_files(chat_id, page=1):
     try:
         msg = await StreamBot.send_message(int(chat_id), "Message sent By **Surf-TG**!", disable_notification=True)
         last_id = msg.id
-        await msg.delete()
         data = await db.get_dbchannel(chat_id, last_id)
         if last_id != data['first_message_id']:
             fmsg_id = data['first_message_id']
@@ -46,6 +45,8 @@ async def get_files(chat_id, page=1):
             json_data = json.dumps(get)
             if data := json.loads(json_data):
                 await db.add_files(data)
+                await db.get_dbchannel_update(chat_id, last_id)
+            await msg.delete()
         return await db.list_tgfiles(id=chat_id, page=page)
     except Exception as e:
         print(e)

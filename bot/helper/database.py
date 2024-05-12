@@ -80,17 +80,21 @@ class Database:
 
     async def get_dbchannel(self, chat_id, last_message_id):
         if existing_entry := self.channel.find_one({"chat_id": chat_id}):
-            self.channel.update_one(
-                {"chat_id": chat_id},
-                {"$set": {"last_message_id": last_message_id,
-                          "first_message_id": existing_entry["last_message_id"]}}
-            )
-            first_message_id = existing_entry["last_message_id"]
+            first_message_id = existing_entry["first_message_id"]
+            last_message_id = existing_entry["last_message_id"]
         else:
             self.channel.insert_one(
                 {"chat_id": chat_id, "last_message_id": last_message_id, "first_message_id": 1})
             first_message_id = 1
         return {"chat_id": chat_id, "first_message_id": first_message_id, "last_message_id": last_message_id}
+
+
+    async def get_dbchannel_update(self, chat_id, last_message_id):
+            self.channel.update_one(
+                {"chat_id": chat_id},
+                {"$set": {"first_message_id": last_message_id, "last_message_id": last_message_id}}
+            )
+
 
     async def add_files(self, data):
         result = self.files.insert_many(data)
