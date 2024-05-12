@@ -6,7 +6,7 @@ from pyrogram import idle
 
 from bot import __version__, LOGGER
 from bot.config import Telegram
-from bot.server import web_server
+from bot.server import indexing, web_server
 from bot.telegram import StreamBot
 from bot.telegram.clients import initialize_clients
 
@@ -24,7 +24,9 @@ async def start_services():
     await asleep(1.2)
     LOGGER.info("Initializing Multi Clients")
     await initialize_clients()
-
+    await asleep(2)
+    LOGGER.info("Start initial indexing. It will take time depending on the number of files in the channel.")
+    await indexing()
     await asleep(2)
     LOGGER.info('Initalizing Surf Web Server..')
     server = web.AppRunner(await web_server())

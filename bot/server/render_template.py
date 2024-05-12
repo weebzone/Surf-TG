@@ -4,7 +4,7 @@ from os import path as ospath
 from bot import LOGGER
 from bot.config import Telegram
 from bot.helper.exceptions import InvalidHash
-from bot.helper.file_size import get_readable_file_size
+from bot.helper.utils import get_readable_file_size
 from bot.server.file_properties import get_file_ids
 from bot.telegram import StreamBot
 
