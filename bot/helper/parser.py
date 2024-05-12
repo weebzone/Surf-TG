@@ -1,7 +1,8 @@
 from os import environ
 
+
 class TokenParser:
-    def __init__(self, config_file = None):
+    def __init__(self, config_file=None):
         self.tokens = {}
         self.config_file = config_file
 

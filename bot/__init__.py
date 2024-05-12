@@ -4,7 +4,7 @@ from logging import getLogger, FileHandler, StreamHandler, INFO, ERROR, basicCon
 from uvloop import install
 
 install()
-basicConfig(format="[%(asctime)s] [%(levelname)s] - %(message)s", # [%(filename)s:%(lineno)d]
+basicConfig(format="[%(asctime)s] [%(levelname)s] - %(message)s",
             datefmt="%d-%b-%y %I:%M:%S %p",
             handlers=[FileHandler('log.txt'), StreamHandler()],
             level=INFO)
@@ -16,6 +16,6 @@ getLogger("aiohttp.web").setLevel(ERROR)
 LOGGER = getLogger(__name__)
 StartTime = time()
 
-__version__ = "1.0.0"
+__version__ = "1.2.0"
 
 

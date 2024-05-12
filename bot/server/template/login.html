@@ -4,8 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="https://cdn.jsdelivr.net/gh/weebzone/weebzone/data/Surf-TG/src/ico.png" type="image/x-icon">
-    <link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/weebzone/weebzone/data/Surf-TG/src/ico.png" type="image/x-icon">
+    <link rel="icon" href="https://cdn.jsdelivr.net/gh/weebzone/weebzone/data/Surf-TG/src/ico2.png" type="image/x-icon">
+    <link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/weebzone/weebzone/data/Surf-TG/src/ico2.png"
+        type="image/x-icon">
     <title>Surf-TG: Login</title>
     <link rel="stylesheet" href="https://bootswatch.com/5/<!-- Theme -->/bootstrap.min.css">
     <style>
@@ -27,10 +28,8 @@
             width: 100%;
             max-width: 400px;
             padding: 20px;
-            border: 1px solid #ccc;
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            background-color: #fff;
         }
 
         button {
@@ -46,6 +45,18 @@
         .card {
             align-items: center;
         }
+
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
     </style>
 </head>
 
@@ -53,7 +64,8 @@
     <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark" style="margin-bottom: 1rem; padding: 10px;">
         <div class="container" style="align-items: flex-start;">
             <a class="navbar-brand" style="border: 0px;" href="/">
-                <img src="https://cdn.jsdelivr.net/gh/weebzone/weebzone/data/Surf-TG/src/logo.png" alt="Logo" height="45">
+                <img src="https://cdn.jsdelivr.net/gh/weebzone/weebzone/data/Surf-TG/src/logo%20(2).png" alt="Logo"
+                    height="45">
             </a>
         </div>
     </nav>
@@ -77,20 +89,26 @@
                     <input type="password" class="form-control" id="exampleInputPassword1" name="password"
                         placeholder="Password" autocomplete="off">
                 </div>
-                <button type="submit" class="btn btn-primary inputBox">Submit</button>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary inputBox">Submit</button>
+                </div>
             </fieldset>
         </form>
     </div>
-    <footer class="footer mt-auto py-3 text-muted" style="color: white;">
+    <footer class="footer mt-auto py-3 text-muted text-center" style="color: white;">
         <div class="container d-flex justify-content-center align-items-center" style="width: 100%; padding: 0 10px;">
             <p class="float-end">
             <p>Made with <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-heart-fill" fill="red"
                     xmlns="http://www.w3.org/2000/svg">
                     <path fill-rule="evenodd"
                         d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z" />
-                </svg> by <a href="https://github.com/weebzone" target="_blank">Karan Adhikari</a>
+                </svg> by <a href="https://github.com/weebzone" target="_blank">Karan Adhikari</a><br>
+                &copy; 2024 <a href="https://github.com/weebzone/Surf-TG" target="_blank">Surf-TG</a>. All Rights
+                Reserved.
+            </p>
         </div>
     </footer>
+
 </body>
 <script>
     window.onload = function () {
@@ -98,26 +116,17 @@
         var errorMessage = errorPopup.querySelector("strong").innerText.trim();
 
         if (errorMessage !== "Oh snap! Invalid username or password") {
+
             errorPopup.style.display = "none";
+
+        }
+        if (errorMessage === "Oh snap! Invalid username or password") {
+            setTimeout(function () {
+                errorPopup.style.display = "none";
+            }, 5000);
         }
     };
 </script>
-<script>
-    
-    document.addEventListener("contextmenu", function (e) {
-        e.preventDefault();
-    });
-    document.addEventListener('keydown', function (e) {
-        if (
-            e.key === 'F12' ||
-            (e.ctrlKey && e.shiftKey && e.key === 'I') ||
-            (e.ctrlKey && e.key === 'u') ||
-            e.ctrlKey ||
-            e.shiftKey ||
-            e.altKey
-        ) {
-            e.preventDefault();
-        }
-    });
-    </script>
+
+
 </html>

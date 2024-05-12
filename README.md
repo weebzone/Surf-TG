@@ -23,18 +23,16 @@
 - Faster Resumeable Download Link ⏩
 - Stream Video Support 📺
 - 25 Website Themes (Bootswatch) 🎨
+- Playlist Creator Support 📀
+- Database Support 💾
 
 ### ***To-Do*** 📦
 
 - [ ] API Support 🛠️
-- [ ] Database Support 💾
-- [ ] Playlist Creator Support 📀
+- [ ] Admin Pannel Support 👑
 
 ## ***Website Screenshots*** 🌐
 
-- **Demo Url:** https://surftg-d5bc40cb110d.herokuapp.com/
-- **Username:** admin 
-- **Password:** admin
 
 <div style="overflow-x: auto; white-space: nowrap;">
   <img src="https://graph.org/file/67c1500ecd0b9eb3a5700.png" style="width: 400px; display: inline-block; margin-right: 10px;" />
@@ -57,14 +55,16 @@ To run this Surf-TG, you will need to add the following environment variables to
 | `API_HASH` (required) | Telegram api_hash obtained from https://my.telegram.org/apps. `str`
 | `BOT_TOKEN` (required) | The Telegram Bot Token that you got from @BotFather `str`
 | `AUTH_CHANNEL` (required) | Chat_ID of the Channel you are using for index (Seperate Multiple Channel By `,` eg- `-100726731829, -10022121832`). `int`
-| `SESSION_STRING` (required) | Use same account which is a participant of the `AUTH_CHANNEL`. `str`
+| `DATABASE_URL` (required) | Your Mongo Database URL (Connection string). Follow this [Guide](https://github.com/weebzone/Surf-TG/tree/main#generate-database) to generate database. `str`
 | `BASE_URL` (required) | Valid BASE URL where the bot is deployed. Format of URL should be `http://myip`, where myip is the IP/Domain(public) of your bot. For `Heroku` use `App Url`. `str`
 | `PORT` | Port on which app should listen to, defaults to `8080`. `int`
 | `USERNAME` | default  username is `admin`. `str`
 | `PASSWORD` | default  password is `admin`. `str`
+| `ADMIN_USERNAME` | Set the admin username so that the admin can log in to [Playlist Creator](https://github.com/weebzone/Surf-TG/tree/main#playlist-creator). Make it different from `USERNAME`. The default admin username is `surfTG`. `str`
+| `ADMIN_PASSWORD` | Set the admin password so that the admin can log in to [Playlist Creator](https://github.com/weebzone/Surf-TG/tree/main#playlist-creator). Make it different from `PASSWORD`. The default admin password is `surfTG`. `str`
 | `SLEEP_THRESHOLD` | Set a sleep threshold for flood wait exceptions, defaut is `60`. `int`
 | `WORKERS` | Number of maximum concurrent workers for handling incoming updates, default is `10`. `int`
-| `MULTI_TOKEN*` | Multi bot token for handing incoming updates. (*)asterisk represents any interger starting from 1. `str`
+| `MULTI_TOKEN` | Multi bot token for handing incoming updates. (*)asterisk represents any interger starting from 1. `str`
 | `THEME` | Choose any Bootswatch theme for UI, Default is `flatly`. `str`
 
 
@@ -102,17 +102,35 @@ you may also add as many as bots you want. (max limit is 50)
 > [!WARNING]
 > Don't forget to add all these worker bots to the `AUTH_CHANNEL` for the proper functioning
 
-### Generate Session String 
+
+### ***Generate Database*** 💾
 
 > [!NOTE]
-> **Why Session String is needed?** <br><br>
-> The session string is required to fetch files from the `AUTH_CHANNEL` due to a restriction in the Telegram API. Only users are allowed to fetch files from channels; bots cannot do so.
+> **Why Database is Required** <br><br>
+> In Playlist Creator, the folder and file data are stored. As of now, the session string is not required in Surf-TG, so to store these files, the database is necessary. <br>
+
+
+1. Go to `https://mongodb.com/` and sign-up.
+2. Create Shared Cluster.
+3. Press on `Database` under `Deployment` Header, your created cluster will be there.
+5. Press on connect, choose `Allow Access From Anywhere` and press on `Add IP Address` without editing the ip, then
+   create user.
+6. After creating user press on `Choose a connection`, then press on `Connect your application`. Choose `Driver` 
+   **python** and `version` **3.6 or later**.
+7. Copy your `connection string` and replace `<password>` with the password of your user, then press close.
+
+### ***Playlist Creator*** 📀
 
 > [!NOTE]
-> **Make Sure that you have to Generate the `Pyrogram Session String`**
+> **Login With `ADMIN_USERNAME` and `ADMIN_PASSWORD`** <br><br>
 
-To generate the Session String use this [Colab Tool](https://colab.research.google.com/drive/1u4F2CtYU_Q3_rWfjYtt1IvRJfNKmBKyM)
-
+- 📁 Create Folder/Subfolder
+- ✏️ Edit the Folder Name
+- 🖼️ Edit the Folder Thumbnail
+- 📥 Directly Store File in folder from `AUTH_CHANNEL`
+- 🔍 Search Support of file in Playlist folder (limited to the folder which is open in the browser)
+- ✏️ Edit Filename of File
+- 🖼️ Edit Thumbnail of File
 
 ## Deployment
 
@@ -176,6 +194,28 @@ sudo docker stop id
 
 Easily Deploy to Heroku use this [Colab Tool](https://colab.research.google.com/drive/1R5YBUg8TINgxAm4Hvejjy0VgsKGmb8vV)
 
+
+## FAQ 🤔
+
+#### Question 1:  Is a session string required in Surf-TG?
+
+Answer: No, it is not required.
+
+#### Question 2: Why is the initial indexing slow?
+
+Answer: The initial indexing process might be slow because the bot retrieves and stores file data in the MongoDB database without needing the session string. This optimization ensures that subsequent indexing processes are faster.
+
+#### Question 3: Can anyone create or edit folders/files in Playlist Creator?
+
+Answer: No, only admins with `ADMIN_USERNAME` and `ADMIN_PASSWORD` can log in to Playlist Creator.
+
+#### Question 4: If i delete the mongoDb database then my playlist also deleted?
+
+Answer: Yes, Your all the playlist will be deleted.
+
+#### Question 5: If i delete the file from `AUTH_CHANNEL` still then it will be played in Surf-TG?
+
+Answer: No, Once the file is deleted it will be no more playable.
 
 ## Contributing
 

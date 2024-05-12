@@ -3,7 +3,7 @@ def get_readable_file_size(size_in_bytes):
     if not size_in_bytes:
         return '0B'
     index, SIZE_UNITS = 0, ['B', 'KB', 'MB', 'GB', 'TB', 'PB']
-    
+
     while size_in_bytes >= 1024 and index < len(SIZE_UNITS) - 1:
         size_in_bytes /= 1024
         index += 1

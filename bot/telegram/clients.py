@@ -1,4 +1,3 @@
-
 from asyncio import sleep as asleep, gather
 from pyrogram import Client
 
@@ -7,13 +6,14 @@ from bot.config import Telegram
 from bot.helper.parser import TokenParser
 from bot.telegram import multi_clients, work_loads, StreamBot
 
+
 async def initialize_clients():
     multi_clients[0], work_loads[0] = StreamBot, 0
     all_tokens = TokenParser().parse_from_env()
     if not all_tokens:
         LOGGER.info("No additional Bot Clients found, Using default client")
         return
-    
+
     async def start_client(client_id, token):
         try:
             LOGGER.info(f"Starting - Bot Client {client_id}")
@@ -31,7 +31,8 @@ async def initialize_clients():
             work_loads[client_id] = 0
             return client_id, client
         except Exception:
-            LOGGER.error(f"Failed starting Client - {client_id} Error:", exc_info=True)
+            LOGGER.error(
+                f"Failed starting Client - {client_id} Error:", exc_info=True)
 
     clients = await gather(*[start_client(i, token) for i, token in all_tokens.items()])
     multi_clients.update(dict(clients))
@@ -39,4 +40,5 @@ async def initialize_clients():
         Telegram.MULTI_CLIENT = True
         LOGGER.info("Multi-Client Mode Enabled")
     else:
-        LOGGER.info("No additional clients were initialized, using default client")
+        LOGGER.info(
+            "No additional clients were initialized, using default client")
