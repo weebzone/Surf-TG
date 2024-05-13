@@ -3,7 +3,7 @@ from traceback import format_exc
 
 from aiohttp import web
 from pyrogram import idle
-
+from os import environ
 from bot import __version__, LOGGER
 from bot.config import Telegram
 from bot.server import web_server
@@ -36,7 +36,10 @@ async def start_services():
     LOGGER.info("Server Setup Started !")
 
     await server.setup()
-    await web.TCPSite(server, '0.0.0.0', Telegram.PORT).start()
+    port = int(environ.get("PORT", 8080))
+    await web.TCPSite(server, '0.0.0.0', port).start()
+    await asleep(2)
+    
     await idle()
 
 
