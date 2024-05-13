@@ -6,6 +6,7 @@ image_cache = {}
 path = ospath.join('bot/server/static', 'thumbnail.jpg')
 
 async def get_image(chat_id, message_id):
+    global image_cache
     cache_key = f"{chat_id}-{message_id}" if message_id else f"{chat_id}"
     if cache_key in image_cache:
         return image_cache[cache_key]

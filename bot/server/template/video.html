@@ -88,17 +88,19 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark" style="margin-bottom: 1rem; padding: 10px;">
-        <div class="container">
-            <a class="navbar-brand" style="border: 0px;" href="/">
+    <nav class="navbar navbar-expand-lg bg-primary mb-3 p-1" data-bs-theme="dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
                 <img src="https://cdn.jsdelivr.net/gh/weebzone/weebzone/data/Surf-TG/src/logo%20(2).png" alt="Logo"
-                    height="45">
+                    height="40">
             </a>
-            <div>
-                <form id="signoutForm" action="/logout" method="post">
-                    <button type="submit" class="btn btn-primary"><i class="bi bi-box-arrow-left"></i> Logout</button>
+            <div class="d-flex">
+                <form id="signoutForm" action="/logout" method="post" class="d-flex" role="logout">
+                    <button type="submit" class="btn btn-secondary btn-sm"><i class="bi bi-box-arrow-left"></i>
+                        Logout</button>
                 </form>
             </div>
+
         </div>
     </nav>
     <div class="video-player">
@@ -113,8 +115,9 @@
         </div>
     </div>
     <div class="container d-flex justify-content-center align-items-center" style="width: 100%; padding: 0 5px;">
-
+        <div onclick="mx_player()" class="btn btn-primary">MX Player</div>
         <div onclick="vlc_player()" class="btn btn-primary">VLC Mobile</div>
+        <div onclick="km_player()" class="btn btn-primary">KM Player</div>
         <div onclick="get_file()" class="btn btn-primary">Get File</div>
         <div onclick="copyUrl()" class="btn btn-primary">Copy Url</div>
         <div onclick="download()" class="btn btn-primary">Download</div>
@@ -134,18 +137,37 @@
 </body>
 <script>
     const videolink = window.location.href;
-    const downloadlink = videolink.replace("/watch/", "/");
+    const url = new URL(videolink);
+    const domainUrl = url.origin;
+    const videoIdWithParams = videolink.split('/').pop();
+    const videoId = videoIdWithParams.split('?')[0];
+    const idParam = new URLSearchParams(window.location.search).get('id');
+    const hashParam = new URLSearchParams(window.location.search).get('hash');
+    const encodedName = encodeURIComponent('<!-- Filename -->');
+
+    const downloadlink = `${domainUrl}/${videoId}/${encodedName}?id=${idParam}&hash=${hashParam}`;
+
     const player = new Plyr('#player', {
         controls: ['play', 'progress', 'current-time', 'mute', 'volume', 'fullscreen', 'pip', 'airplay', 'settings', "play-large", 'duration'],
         hideControls: false,
         keyboard: { focused: true, global: true },
         loop: { active: false },
     });
+    function mx_player() {
+        const openDownloadLink = downloadlink;
+        const openMx = `intent:${openDownloadLink}#Intent;package=com.mxtech.videoplayer.ad;end`;
+        window.location.href = openMx;
+    }
 
     function vlc_player() {
         const openDownloadLink = downloadlink;
         const openVlc = `vlc://${openDownloadLink}`;
         window.location.href = openVlc;
+    }
+    function km_player() {
+        const openDownloadLink = downloadlink;
+        const openKmplayer = `intent:${openDownloadLink}#Intent;package=com.kmplayer;end`;
+        window.location.href = openKmplayer;
     }
     function download() {
         const openDownloadLink = downloadlink;
@@ -173,8 +195,7 @@
     }
     function updateVideoSource() {
         const videoElement = document.getElementById('player');
-        const currentUrl = window.location.href;
-        const newSrc = currentUrl.replace("/watch/", "/");
+        const newSrc = downloadlink;
         videoElement.src = newSrc;
     }
     window.onload = function () {

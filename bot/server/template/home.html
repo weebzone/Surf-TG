@@ -62,6 +62,30 @@
 
 <body>
 
+    <div class="admin-only modal fade" id="editConfigModal" aria-labelledby="editConfigModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <form action="/config" method="post">
+                        <label for="edit_channel">Auth Channel:</label>
+                        <input type="text" class="form-control" id="edit_channel" name="channel" value=""><br>
+                        <label for="edit_theme">Theme:</label>
+                        <input type="text" class="form-control" id="edit_theme" name="theme" value="<!-- Theme -->"><br>
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn btn-primary me-2"
+                                onclick="submitEditConfigForm()">Submit</button>
+                            <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
     <div class="admin-only modal fade" id="createFolderModal" aria-labelledby="createFolderModalLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -114,10 +138,21 @@
                 <img src="https://cdn.jsdelivr.net/gh/weebzone/weebzone/data/Surf-TG/src/logo%20(2).png" alt="Logo"
                     height="40">
             </a>
-            <form id="signoutForm" action="/logout" method="post" class="d-flex" role="logout">
-                <button type="submit" class="btn btn-secondary btn-sm"><i class="bi bi-box-arrow-left"></i>
-                    Logout</button>
-            </form>
+            <div class="d-flex">
+                <button type="button" class="admin-only btn btn-primary me-2" data-bs-toggle="modal"
+                    data-bs-target="#editConfigModal"><i
+                        class="bi bi-pencil"></i></button>
+                <form action="/reload" method="get" role="reload" class="admin-only ">
+                    <button type="submit" class="btn btn-primary me-2" name="chatId" value="home">
+                        <i class="bi bi-arrow-clockwise"></i>
+                    </button>
+                </form>
+                <form id="signoutForm" action="/logout" method="post" class="d-flex" role="logout">
+                    <button type="submit" class="btn btn-secondary btn-sm"><i class="bi bi-box-arrow-left"></i>
+                        Logout</button>
+                </form>
+            </div>
+
         </div>
     </nav>
     <div class="container d-flex align-items-center justify-content-center">
@@ -129,7 +164,7 @@
     </div>
     <div class="container py-2">
         <!-- Channel grid  -->
-        <div class="row row-cols-2 row-cols-md-4 row-cols-lg-6 g-2">
+        <div class="hide-channel row row-cols-2 row-cols-md-4 row-cols-lg-6 g-2">
             <!-- Channel card  -->
             <!-- Print -->
         </div>
@@ -153,5 +188,31 @@
         </div>
     </footer>
 </body>
+<script>
+    function setDefaultChannelValue() {
+        const channelCards = document.querySelectorAll('.channel-card');
+
+        const cids = Array.from(channelCards).map(card => {
+            const link = card.querySelector('a');
+            console.log(link)
+            if (link) {
+                const cid = link.getAttribute('href').split('/').pop();
+                return `-100${cid}`;
+            }
+            return null;
+        }).filter(cid => cid !== null);
+
+        const channelInput = document.getElementById('edit_channel');
+        channelInput.value = cids.join(', ');
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const editConfigModal = document.getElementById('editConfigModal');
+        editConfigModal.addEventListener('show.bs.modal', function () {
+            setDefaultChannelValue();
+        });
+    });
+
+</script>
 
 </html>

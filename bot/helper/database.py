@@ -1,3 +1,4 @@
+from os import environ
 from pymongo import DESCENDING, MongoClient
 from bson import ObjectId
 from bot.config import Telegram
@@ -9,8 +10,6 @@ class Database:
         self.mongo_client = MongoClient(MONGODB_URI)
         self.db = self.mongo_client["surftg"]
         self.collection = self.db["playlist"]
-        self.channel = self.db["channel"]
-        self.files = self.db["files"]
 
     async def create_folder(self, parent_id, folder_name, thumbnail):
         folder = {"parent_folder": parent_id, "name": folder_name,
@@ -77,50 +76,20 @@ class Database:
         mydoc = self.collection.find(query).sort(
             '_id', DESCENDING).skip(offset).limit(per_page)
         return list(mydoc)
+    
 
-    async def get_dbchannel(self, chat_id, last_message_id):
-        if existing_entry := self.channel.find_one({"chat_id": chat_id}):
-            first_message_id = existing_entry["first_message_id"]
-            last_message_id = existing_entry["last_message_id"]
-        else:
-            self.channel.insert_one(
-                {"chat_id": chat_id, "last_message_id": last_message_id, "first_message_id": 1})
-            first_message_id = 1
-        return {"chat_id": chat_id, "first_message_id": first_message_id, "last_message_id": last_message_id}
-
-
-    async def get_dbchannel_update(self, chat_id, last_message_id):
-            self.channel.update_one(
-                {"chat_id": chat_id},
-                {"$set": {"first_message_id": last_message_id, "last_message_id": last_message_id}}
-            )
-
-
-    async def add_files(self, data):
-        result = self.files.insert_many(data)
-
-    async def list_tgfiles(self, id, page=1, per_page=50):
-        query = {'chat_id': id}
-        offset = (int(page) - 1) * per_page
-        mydoc = self.files.find(query).sort(
-            'msg_id', DESCENDING).skip(offset).limit(per_page)
-        return list(mydoc)
-
-    async def search_tgfiles(self, id, query, page=1, per_page=50):
-        words = query.split()
-        regex_query = {'$regex': '.*' +
-                       '.*'.join(words) + '.*', '$options': 'i'}
-        query = {'chat_id': id, 'title': regex_query}
-        offset = (int(page) - 1) * per_page
-        mydoc = self.files.find(query).sort(
-            'msg_id', DESCENDING).skip(offset).limit(per_page)
-        return list(mydoc)
-
-
-    def delete_file(self, chat_id, msg_id, hash):
-        try:
-            result = self.files.delete_one({'chat_id': str(chat_id), 'msg_id': int(msg_id), 'hash': str(hash)})
-            return result.deleted_count > 0
-        except Exception as e:
-            print(f'An error occurred: {e}')
-            return False
+    async def get_variable(self, key):
+        bot_id = Telegram.BOT_TOKEN.split(":", 1)[0]
+        config = self.db.settings.deployConfig.find_one({"_id": bot_id})
+        return config.get(key)
+        
+    async def update_config(self, key, value):
+        bot_id = Telegram.BOT_TOKEN.split(":", 1)[0]
+        update_result = self.db.settings.deployConfig.update_one(
+            {"_id": bot_id},
+            {"$set": {key: value}}
+        )
+        if update_result.modified_count > 0:
+            environ[key] = str(value)
+            return True
+        return False
