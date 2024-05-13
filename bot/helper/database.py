@@ -93,7 +93,6 @@ class Database:
                 self.db.settings.deployConfig.replace_one(
                     {"_id": bot_id}, current_config, upsert=True
                 )
-        return True
 
 
 
