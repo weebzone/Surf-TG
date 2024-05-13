@@ -29,6 +29,10 @@ async def start_services():
     await initialize_clients()
 
     await asleep(2)
+    LOGGER.info("Storing config.env in Database..")
+    await db.setup_config()
+    
+    await asleep(2)
     LOGGER.info('Initalizing Surf Web Server..')
     server = web.AppRunner(await web_server())
     LOGGER.info("Server CleanUp!")
@@ -39,10 +43,6 @@ async def start_services():
 
     await server.setup()
     await web.TCPSite(server, '0.0.0.0', Telegram.PORT).start()
-
-    LOGGER.info("Storing config.env in Database..")
-    await db.setup_config()
-    await asleep(2)
 
     LOGGER.info("Done You are ready to use the Surf-TG !")
     await idle()

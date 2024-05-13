@@ -89,10 +89,12 @@ class Database:
             )
         else:
             del old_config["_id"]
-        if old_config and old_config != current_config:
-            self.db.settings.deployConfig.replace_one(
-                {"_id": bot_id}, current_config, upsert=True
-            )
+            if old_config != current_config:
+                self.db.settings.deployConfig.replace_one(
+                    {"_id": bot_id}, current_config, upsert=True
+                )
+        return True
+
 
 
     async def get_variable(self, key):
