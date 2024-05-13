@@ -5,6 +5,7 @@ import mimetypes
 import secrets
 from aiohttp import web
 from aiohttp.http_exceptions import BadStatusLine
+from bot.helper.cache import rm_cache
 from bot.helper.chats import get_chats, post_playlist, posts_chat, posts_db_file
 from bot.helper.database import Database
 from bot.helper.search import search
@@ -63,8 +64,9 @@ async def logout_route(request):
 @routes.post('/create')
 async def create_route(request):
     session = await get_session(request)
-    if (username := session.get('user')) != Telegram.ADMIN_USERNAME:
-        return web.json_response({'msg': 'Who the hell you are'})
+    username = session.get('user')
+    if username != Telegram.ADMIN_USERNAME:
+        return web.HTTPUnauthorized(text='Unauthorized')
     data = await request.post()
     folderName = data.get('folderName')
     thumbnail = data.get('thumbnail')
@@ -80,8 +82,9 @@ async def create_route(request):
 @routes.post('/delete')
 async def delete_route(request):
     session = await get_session(request)
-    if (username := session.get('user')) != Telegram.ADMIN_USERNAME:
-        return web.json_response({'msg': 'Who the hell you are'})
+    username = session.get('user')
+    if username != Telegram.ADMIN_USERNAME:
+        return web.HTTPUnauthorized(text='Unauthorized')
     data = await request.json()
     id = data.get('delete_id')
     parent = data.get('parent')
@@ -96,8 +99,9 @@ async def delete_route(request):
 @routes.post('/edit')
 async def editFolder_route(request):
     session = await get_session(request)
-    if (username := session.get('user')) != Telegram.ADMIN_USERNAME:
-        return web.json_response({'msg': 'Who the hell you are'})
+    username = session.get('user')
+    if username != Telegram.ADMIN_USERNAME:
+        return web.HTTPUnauthorized(text='Unauthorized')
     data = await request.post()
     folderName = data.get('folderName')
     thumbnail = data.get('thumbnail')
@@ -115,8 +119,9 @@ async def editFolder_route(request):
 @routes.post('/edit_post')
 async def editPost_route(request):
     session = await get_session(request)
-    if (username := session.get('user')) != Telegram.ADMIN_USERNAME:
-        return web.json_response({'msg': 'Who the hell you are'})
+    username = session.get('user')
+    if username != Telegram.ADMIN_USERNAME:
+        return web.HTTPUnauthorized(text='Unauthorized')
     data = await request.post()
     fileName = data.get('fileName')
     thumbnail = data.get('filethumbnail')
@@ -134,15 +139,52 @@ async def editPost_route(request):
 @routes.get('/searchDbFol')
 async def searchDbFolder_route(request):
     session = await get_session(request)
-    if (username := session.get('user')) != Telegram.ADMIN_USERNAME:
-        return web.json_response({'msg': 'Who the hell you are'})
+    username = session.get('user')
+    if username != Telegram.ADMIN_USERNAME:
+        return web.HTTPUnauthorized(text='Unauthorized')
     query = request.query.get('query', '')
     folder_names = await db.search_DbFolder(query)
     return web.json_response(folder_names)
 
 
+@routes.get('/reload')
+async def reload_route(request):
+    session = await get_session(request)
+    username = session.get('user')
+    if username != Telegram.ADMIN_USERNAME:
+        return web.HTTPUnauthorized(text='Unauthorized')
+    
+    chat_id = request.query.get('chatId', '')
+    if chat_id == 'home':
+        rm_cache()
+        return web.HTTPFound('/')
+    else:
+        rm_cache(f"-100{chat_id}")
+        return web.HTTPFound(f'/channel/{chat_id}')
+
+
+@routes.post('/config')
+async def editConfig_route(request):
+    session = await get_session(request)
+    username = session.get('user')
+    if username != Telegram.ADMIN_USERNAME:
+        return web.HTTPUnauthorized(text='Unauthorized')
+    data = await request.post()
+    channel = data.get('channel')
+    theme = data.get('theme')
+    success_channel = await db.update_config(key="AUTH_CHANNEL", value=channel)
+    success_theme = await db.update_config(key="THEME", value=theme)
+    if not (success_channel or success_theme):
+        return web.HTTPInternalServerError()
+    return web.HTTPFound('/')
+
+
 @routes.post('/send')
 async def send_route(request):
+    session = await get_session(request)
+    username = session.get('user')
+    if username != Telegram.ADMIN_USERNAME:
+        return web.HTTPUnauthorized(text='Unauthorized')
     data = await request.post()
     chat_id = data.get('chatId')
     chat_id = f"-100{chat_id}"
@@ -319,11 +361,12 @@ async def stream_handler_watch(request: web.Request):
         return web.HTTPFound('/login')
 
 
-@routes.get('/{chat_id}', allow_head=True)
+@routes.get('/{chat_id}/{encoded_name}', allow_head=True)
 async def stream_handler(request: web.Request):
     try:
         chat_id = request.match_info['chat_id']
         chat_id = f"-100{chat_id}"
+        name = request.match_info['encoded_name']
         message_id = request.query.get('id')
         secure_hash = request.query.get('hash')
         return await media_streamer(request, int(chat_id), int(message_id), secure_hash)
@@ -336,7 +379,7 @@ async def stream_handler(request: web.Request):
         pass
     except Exception as e:
         logging.critical(e.with_traceback(None))
-        raise web.HTTPInternalServerError(text=str(e))
+        raise web.HTTPInternalServerError(text=str(e)) from e
 
 
 class_cache = {}

@@ -1,55 +1,29 @@
-import json
 from os.path import splitext
+from bot.config import Telegram
+from bot.helper.cache import get_cache, save_cache
 from bot.helper.database import Database
-from bot.telegram import StreamBot
+from bot.telegram import UserBot
 from bot.helper.utils import get_readable_file_size
 
 db = Database()
 
-message_cache = {}
-
-async def get_messages(chat_id, first_message_id, last_message_id):
-    messages = []
-    current_message_id = first_message_id
-    while current_message_id <= last_message_id:
-        if current_message_id in message_cache:
-            message = message_cache[current_message_id]
-        else:
-            try:
-                message = await StreamBot.get_messages(chat_id, current_message_id)
-                message_cache[current_message_id] = message
-            except Exception as e:
-                break
-
-        file = message.video or message.document
+async def get_files(chat_id, page=1):
+    if Telegram.USE_CACHE:
+        if cache := get_cache(chat_id, int(page)):
+            return cache
+    posts = []
+    async for post in UserBot.get_chat_history(chat_id=int(chat_id), limit=50, offset=(int(page) - 1) * 50):
+        file = post.video or post.document
         if not file:
-            current_message_id += 1
             continue
-        title = file.file_name or message.caption or file.file_id
+        title = file.file_name or post.caption or file.file_id
         title, _ = splitext(title)
         title = title.replace('.', ' ').replace('|', ' ').replace('_', ' ')
-        messages.append({"msg_id": message.id, "title": title,
-                         "hash": file.file_unique_id[:6], "size": get_readable_file_size(file.file_size), "type": file.mime_type, "chat_id": str(chat_id)})
-        current_message_id += 1
-    return messages
-
-
-async def get_files(chat_id, page=1):
-    try:
-        msg = await StreamBot.send_message(int(chat_id), "Message sent By **Surf-TG**!", disable_notification=True)
-        last_id = msg.id
-        data = await db.get_dbchannel(chat_id, last_id)
-        if last_id != data['first_message_id']:
-            fmsg_id = data['first_message_id']
-            get = await get_messages(int(chat_id), int(fmsg_id), int(last_id))
-            json_data = json.dumps(get)
-            if data := json.loads(json_data):
-                await db.add_files(data)
-                await db.get_dbchannel_update(chat_id, last_id)
-            await msg.delete()
-        return await db.list_tgfiles(id=chat_id, page=page)
-    except Exception as e:
-        print(e)
+        posts.append({"msg_id": post.id, "title": title,
+                      "hash": file.file_unique_id[:6], "size": get_readable_file_size(file.file_size), "type": file.mime_type})
+    if Telegram.USE_CACHE:
+        save_cache(chat_id, {"posts": posts}, page)
+    return posts
 
 
 async def posts_file(posts, chat_id):

@@ -7,3 +7,4 @@ config.env
 *.session-shm
 *.session-wal
 /.vscode/
+*.json

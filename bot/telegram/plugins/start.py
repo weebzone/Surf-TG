@@ -3,6 +3,7 @@ from bot.telegram import StreamBot
 from pyrogram import filters, Client
 from pyrogram.types import Message
 
+
 @StreamBot.on_message(filters.command('start') & filters.private)
 async def start(bot: Client, message: Message):
     if "file_" in message.text:
@@ -15,3 +16,5 @@ async def start(bot: Client, message: Message):
             await message.reply_cached_media(file_id=media.file_id, caption=f'**{media.file_name}**')
         except Exception as e:
             print(f"An error occurred: {e}")
+    else:
+        await message.reply_text(text="Welcome To Surf-TG Bot")

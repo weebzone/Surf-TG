@@ -1,15 +1,19 @@
 from asyncio import gather, create_task
+from bot.helper.database import Database
 from bot.telegram import StreamBot
-from bot.config import Telegram
 
+db = Database()
 
 async def get_chats():
-    return [{"chat-id": chat.id, "title": chat.title or chat.first_name, "type": chat.type.name} for chat in await gather(*[create_task(StreamBot.get_chat(int(channel_id))) for channel_id in Telegram.AUTH_CHANNEL])]
+    channels = await db.get_variable('AUTH_CHANNEL')
+    AUTH_CHANNEL = [channel.strip()
+                    for channel in channels.split(",")]
+    return [{"chat-id": chat.id, "title": chat.title or chat.first_name, "type": chat.type.name} for chat in await gather(*[create_task(StreamBot.get_chat(int(channel_id))) for channel_id in AUTH_CHANNEL])]
 
 
 async def posts_chat(channels):
     phtml = """
-            <div class="col">
+            <div class="col channel-card">
                 <a href="/channel/{cid}">
                     <div class="card profile-card text-white bg-primary mb-2">
                     

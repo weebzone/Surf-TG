@@ -92,10 +92,18 @@
                 <img src="https://cdn.jsdelivr.net/gh/weebzone/weebzone/data/Surf-TG/src/logo%20(2).png" alt="Logo"
                     height="40">
             </a>
-            <form id="signoutForm" action="/logout" method="post" class="d-flex" role="logout">
-                <button type="submit" class="btn btn-secondary btn-sm"><i class="bi bi-box-arrow-left"></i>
-                    Logout</button>
-            </form>
+            <div class="d-flex">
+                <form action="/reload" method="get" role="reload" class="admin-only ">
+                    <button type="submit" class="btn btn-primary me-2" name="chatId" value="<!-- Chat_id -->">
+                        <i class="bi bi-arrow-clockwise" ></i>
+                    </button>
+                </form>
+                <form id="signoutForm" action="/logout" method="post" class="d-flex" role="logout">
+                    <button type="submit" class="btn btn-secondary btn-sm"><i class="bi bi-box-arrow-left"></i>
+                        Logout</button>
+                </form>
+            </div>
+
         </div>
     </nav>
     <div class="container d-flex align-items-center justify-content-center">
