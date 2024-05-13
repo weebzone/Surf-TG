@@ -1,4 +1,3 @@
-from dotenv import dotenv_values
 from os import environ
 from pymongo import DESCENDING, MongoClient
 from bson import ObjectId
@@ -78,23 +77,6 @@ class Database:
             '_id', DESCENDING).skip(offset).limit(per_page)
         return list(mydoc)
     
-    async def setup_config(self):
-        bot_id = Telegram.BOT_TOKEN.split(":", 1)[0]
-        current_config = dict(dotenv_values("config.env"))
-
-        old_config = self.db.settings.deployConfig.find_one({"_id": bot_id})
-        if old_config is None:
-            self.db.settings.deployConfig.replace_one(
-                {"_id": bot_id}, current_config, upsert=True
-            )
-        else:
-            del old_config["_id"]
-            if old_config != current_config:
-                self.db.settings.deployConfig.replace_one(
-                    {"_id": bot_id}, current_config, upsert=True
-                )
-
-
 
     async def get_variable(self, key):
         bot_id = Telegram.BOT_TOKEN.split(":", 1)[0]

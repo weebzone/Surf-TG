@@ -6,14 +6,12 @@ from pyrogram import idle
 
 from bot import __version__, LOGGER
 from bot.config import Telegram
-from bot.helper.database import Database
 from bot.server import web_server
 from bot.telegram import StreamBot, UserBot
 from bot.telegram.clients import initialize_clients
 
 loop = get_event_loop()
 
-db = Database()
 async def start_services():
     LOGGER.info(f'Initializing Surf-TG v-{__version__}')
     await asleep(1.2)
@@ -27,10 +25,6 @@ async def start_services():
     await asleep(1.2)
     LOGGER.info("Initializing Multi Clients")
     await initialize_clients()
-
-    await asleep(2)
-    LOGGER.info("Storing config.env in Database..")
-    await db.setup_config()
     
     await asleep(2)
     LOGGER.info('Initalizing Surf Web Server..')
@@ -43,8 +37,6 @@ async def start_services():
 
     await server.setup()
     await web.TCPSite(server, '0.0.0.0', Telegram.PORT).start()
-
-    LOGGER.info("Done You are ready to use the Surf-TG !")
     await idle()
 
 
