@@ -1,11 +1,11 @@
 from bot.telegram import UserBot
-from bot.helper.utils import get_readable_file_size
 from os.path import splitext
+from bot.helper.file_size import get_readable_file_size
 
 
 async def search(chat_id, query, page):
     posts = []
-    async for post in UserBot.search_messages(chat_id=int(chat_id), limit=50, query=str(query), offset=(int(page) -1 ) * 50):
+    async for post in UserBot.search_messages(chat_id=int(chat_id), limit=50, query=str(query), offset=(int(page) - 1) * 50):
         file = post.video or post.document
         if not file:
             continue

@@ -56,7 +56,7 @@ To run this Surf-TG, you will need to add the following environment variables to
 | `API_HASH` (required) | Telegram api_hash obtained from https://my.telegram.org/apps. `str`
 | `BOT_TOKEN` (required) | The Telegram Bot Token that you got from @BotFather `str`
 | `AUTH_CHANNEL` (required) | Chat_ID of the Channel you are using for index (Seperate Multiple Channel By `,` eg- `-100726731829, -10022121832`). `int`
-| `SESSION_STRING` (required) | Use same account which is a participant of the `AUTH_CHANNEL` Use this [Tool](https://github.com/weebzone/Surf-TG/tree/main#generate-session-string-) to generate Session String. `str`
+| `SESSION_STRING` (required) | Use same account which is a participant of the `AUTH_CHANNEL` Use this [Tool](https://github.com/weebzone/Surf-TG/tree/main#generate-session-string) to generate Session String. `str`
 | `DATABASE_URL` (required) | Your Mongo Database URL (Connection string). Follow this [Guide](https://github.com/weebzone/Surf-TG/tree/main#generate-database-) to generate database. `str`
 | `BASE_URL` (required) | Valid BASE URL where the bot is deployed. Format of URL should be `http://myip`, where myip is the IP/Domain(public) of your bot. For `Heroku` use `App Url`. `str`
 | `PORT` | Port on which app should listen to, defaults to `8080`. `int`

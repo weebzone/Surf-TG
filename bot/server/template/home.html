@@ -61,7 +61,6 @@
 </style>
 
 <body>
-
     <div class="admin-only modal fade" id="editConfigModal" aria-labelledby="editConfigModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -81,11 +80,6 @@
             </div>
         </div>
     </div>
-
-
-
-
-
     <div class="admin-only modal fade" id="createFolderModal" aria-labelledby="createFolderModalLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -139,11 +133,11 @@
                     height="40">
             </a>
             <div class="d-flex">
-                <button type="button" class="admin-only btn btn-primary me-2" data-bs-toggle="modal"
+                <button type="button" class="admin-only btn btn-primary me-1 btn-sm" data-bs-toggle="modal"
                     data-bs-target="#editConfigModal"><i
                         class="bi bi-pencil"></i></button>
                 <form action="/reload" method="get" role="reload" class="admin-only ">
-                    <button type="submit" class="btn btn-primary me-2" name="chatId" value="home">
+                    <button type="submit" class="btn btn-primary me-1 btn-sm" name="chatId" value="home">
                         <i class="bi bi-arrow-clockwise"></i>
                     </button>
                 </form>
@@ -152,7 +146,6 @@
                         Logout</button>
                 </form>
             </div>
-
         </div>
     </nav>
     <div class="container d-flex align-items-center justify-content-center">
@@ -214,5 +207,4 @@
     });
 
 </script>
-
 </html>
