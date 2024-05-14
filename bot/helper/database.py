@@ -1,4 +1,3 @@
-from os import environ
 from pymongo import DESCENDING, MongoClient
 from bson import ObjectId
 from bot.config import Telegram
@@ -10,6 +9,7 @@ class Database:
         self.mongo_client = MongoClient(MONGODB_URI)
         self.db = self.mongo_client["surftg"]
         self.collection = self.db["playlist"]
+        self.config = self.db["config"]
 
     async def create_folder(self, parent_id, folder_name, thumbnail):
         folder = {"parent_folder": parent_id, "name": folder_name,
@@ -77,19 +77,21 @@ class Database:
             '_id', DESCENDING).skip(offset).limit(per_page)
         return list(mydoc)
     
+    async def update_config(self, theme, auth_channel):
+        bot_id = Telegram.BOT_TOKEN.split(":", 1)[0]
+        config = self.config.find_one({"_id": bot_id})
+        if config is None:
+            result = self.config.insert_one({"_id": bot_id, "theme": theme, "auth_channel": auth_channel})
+            return result.inserted_id is not None
+        else:
+            result = self.config.update_one({"_id": bot_id}, {
+                "$set": {"theme": theme, "auth_channel": auth_channel}})
+            return result.modified_count > 0
 
     async def get_variable(self, key):
         bot_id = Telegram.BOT_TOKEN.split(":", 1)[0]
-        config = self.db.settings.deployConfig.find_one({"_id": bot_id})
-        return config.get(key)
-        
-    async def update_config(self, key, value):
-        bot_id = Telegram.BOT_TOKEN.split(":", 1)[0]
-        update_result = self.db.settings.deployConfig.update_one(
-            {"_id": bot_id},
-            {"$set": {key: value}}
-        )
-        if update_result.modified_count > 0:
-            environ[key] = str(value)
-            return True
-        return False
+        config = self.config.find_one({"_id": bot_id})
+        if config is not None:
+            return config.get(key)
+        else:
+            return None

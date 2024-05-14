@@ -4,6 +4,6 @@ aiohttp_session
 cryptography
 pyrofork
 python-dotenv
-pymongo
 tgcrypto
 uvloop
+pymongo

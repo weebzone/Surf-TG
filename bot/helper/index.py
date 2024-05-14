@@ -1,11 +1,8 @@
 from os.path import splitext
 from bot.config import Telegram
-from bot.helper.cache import get_cache, save_cache
-from bot.helper.database import Database
 from bot.telegram import UserBot
-from bot.helper.utils import get_readable_file_size
-
-db = Database()
+from bot.helper.file_size import get_readable_file_size
+from bot.helper.cache import get_cache, save_cache
 
 async def get_files(chat_id, page=1):
     if Telegram.USE_CACHE:
@@ -20,11 +17,10 @@ async def get_files(chat_id, page=1):
         title, _ = splitext(title)
         title = title.replace('.', ' ').replace('|', ' ').replace('_', ' ')
         posts.append({"msg_id": post.id, "title": title,
-                      "hash": file.file_unique_id[:6], "size": get_readable_file_size(file.file_size), "type": file.mime_type})
+                     "hash": file.file_unique_id[:6], "size": get_readable_file_size(file.file_size), "type": file.mime_type})
     if Telegram.USE_CACHE:
         save_cache(chat_id, {"posts": posts}, page)
     return posts
-
 
 async def posts_file(posts, chat_id):
     phtml = """
