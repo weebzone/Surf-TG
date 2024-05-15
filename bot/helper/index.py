@@ -1,13 +1,52 @@
 from os.path import splitext
+import re
 from bot.config import Telegram
-from bot.telegram import UserBot
+from bot.helper.database import Database
+from bot.telegram import StreamBot, UserBot
 from bot.helper.file_size import get_readable_file_size
 from bot.helper.cache import get_cache, save_cache
+from asyncio import gather
+
+db = Database()
+
+
+message_cache = {}
+
+async def fetch_message(chat_id, message_id):
+    if message_id in message_cache:
+        return message_cache[message_id]
+    try:
+        message = await StreamBot.get_messages(chat_id, message_id)
+        message_cache[message_id] = message
+        return message
+    except Exception as e:
+        return None
+
+async def get_messages(chat_id, first_message_id, last_message_id, batch_size=50):
+    messages = []
+    current_message_id = first_message_id
+    while current_message_id <= last_message_id:
+        batch_message_ids = list(range(current_message_id, min(current_message_id + batch_size, last_message_id + 1)))
+        tasks = [fetch_message(chat_id, message_id) for message_id in batch_message_ids]
+        batch_messages = await gather(*tasks)
+        for message in batch_messages:
+            if message:
+                if file := message.video or message.document:
+                    title = file.file_name or message.caption or file.file_id
+                    title, _ = splitext(title)
+                    title = re.sub(r'[.,|_\',]', ' ', title)
+                    messages.append({"msg_id": message.id, "title": title,
+                                     "hash": file.file_unique_id[:6], "size": get_readable_file_size(file.file_size),
+                                     "type": file.mime_type, "chat_id": str(chat_id)})
+        current_message_id += batch_size
+    return messages
+
 
 async def get_files(chat_id, page=1):
-    if Telegram.USE_CACHE:
-        if cache := get_cache(chat_id, int(page)):
-            return cache
+    if Telegram.SESSION_STRING == '':
+        return await db.list_tgfiles(id=chat_id, page=page)
+    if cache := get_cache(chat_id, int(page)):
+        return cache
     posts = []
     async for post in UserBot.get_chat_history(chat_id=int(chat_id), limit=50, offset=(int(page) - 1) * 50):
         file = post.video or post.document
@@ -15,11 +54,10 @@ async def get_files(chat_id, page=1):
             continue
         title = file.file_name or post.caption or file.file_id
         title, _ = splitext(title)
-        title = title.replace('.', ' ').replace('|', ' ').replace('_', ' ')
+        title = re.sub(r'[.,|_\',]', ' ', title)
         posts.append({"msg_id": post.id, "title": title,
-                     "hash": file.file_unique_id[:6], "size": get_readable_file_size(file.file_size), "type": file.mime_type})
-    if Telegram.USE_CACHE:
-        save_cache(chat_id, {"posts": posts}, page)
+                    "hash": file.file_unique_id[:6], "size": get_readable_file_size(file.file_size), "type": file.mime_type})
+    save_cache(chat_id, {"posts": posts}, page)
     return posts
 
 async def posts_file(posts, chat_id):

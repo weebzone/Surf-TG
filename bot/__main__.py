@@ -16,11 +16,13 @@ async def start_services():
     LOGGER.info(f'Initializing Surf-TG v-{__version__}')
     await asleep(1.2)
     
-    await gather(StreamBot.start(), UserBot.start())
+    await StreamBot.start()
     StreamBot.username = StreamBot.me.username
     LOGGER.info(f"Bot Client : {StreamBot.username}")
-    UserBot.username = UserBot.me.username or UserBot.me.first_name or UserBot.me.id
-    LOGGER.info(f"User Client : {UserBot.username}")
+    if Telegram.SESSION_STRING != '':
+        await UserBot.start()
+        UserBot.username = UserBot.me.username or UserBot.me.first_name or UserBot.me.id
+        LOGGER.info(f"User Client : {UserBot.username}")
     
     await asleep(1.2)
     LOGGER.info("Initializing Multi Clients")
@@ -41,7 +43,10 @@ async def start_services():
     await idle()
 
 async def stop_clients():
-    await gather(StreamBot.stop(), UserBot.stop())
+    await StreamBot.stop()
+    if Telegram.SESSION_STRING != '':
+        await UserBot.stop()
+
 
 if __name__ == '__main__':
     try:

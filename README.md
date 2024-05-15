@@ -56,8 +56,8 @@ To run this Surf-TG, you will need to add the following environment variables to
 | `API_HASH` (required) | Telegram api_hash obtained from https://my.telegram.org/apps. `str`
 | `BOT_TOKEN` (required) | The Telegram Bot Token that you got from @BotFather `str`
 | `AUTH_CHANNEL` (required) | Chat_ID of the Channel you are using for index (Seperate Multiple Channel By `,` eg- `-100726731829, -10022121832`). `int`
-| `SESSION_STRING` (required) | Use same account which is a participant of the `AUTH_CHANNEL` Use this [Tool](https://github.com/weebzone/Surf-TG/tree/main#generate-session-string) to generate Session String. `str`
 | `DATABASE_URL` (required) | Your Mongo Database URL (Connection string). Follow this [Guide](https://github.com/weebzone/Surf-TG/tree/main#generate-database-) to generate database. `str`
+| `SESSION_STRING` | Use same account which is a participant of the `AUTH_CHANNEL` Use this [Tool](https://github.com/weebzone/Surf-TG/tree/main#generate-session-string) to generate Session String. `str`
 | `BASE_URL` (required) | Valid BASE URL where the bot is deployed. Format of URL should be `http://myip`, where myip is the IP/Domain(public) of your bot. For `Heroku` use `App Url`. `str`
 | `PORT` | Port on which app should listen to, defaults to `8080`. `int`
 | `USERNAME` | default  username is `admin`. `str`
@@ -70,7 +70,6 @@ To run this Surf-TG, you will need to add the following environment variables to
 | `THEME` | Choose any Bootswatch theme for UI, Default is `flatly`. `str`
 | `MULTI_CLIENT` | Set this `True` if using `MULTI_TOKEN`, Default is `False`. `bool`
 | `HIDE_CHANNEL` | Set this `True` to hide the Channel Card in Public Web, Default is `False`. `bool`
-| `USE_CACHE` | Set this `True` to use the cache system. It will decrease the load on `Session String`, Default is `True`. `bool`
 
 ## ***Themes*** 🎨
 
@@ -126,10 +125,6 @@ you may also add as many as bots you want. (max limit is 50)
 ### Generate Session String 
 
 > [!NOTE]
-> **Why Session String is needed?** <br><br>
-> The session string is required to fetch files from the `AUTH_CHANNEL` due to a restriction in the Telegram API. Only users are allowed to fetch files from channels; bots cannot do so.
-
-> [!NOTE]
 > **Make Sure that you have to Generate the `Pyrofork Session String`**
 
 To generate the Session String use this [Colab Tool](https://colab.research.google.com/drive/1F3cRAdgvFSenOoVSxJFxP-356pE4sWOL)
@@ -147,6 +142,12 @@ To generate the Session String use this [Colab Tool](https://colab.research.goog
 - 🔍 Search Support of file in Playlist folder (limited to the folder which is open in the browser)
 - ✏️ Edit Filename of File
 - 🖼️ Edit Thumbnail of File
+
+### Bot Commands
+
+```
+index - store files in Database
+```
 
 ## Deployment
 
@@ -213,29 +214,45 @@ Easily Deploy to Heroku use this [Colab Tool](https://colab.research.google.com/
 
 ## FAQ 🤔
 
-#### Question 1:  Is a session string required in Surf-TG?
 
-Answer: Yes, it is required. and generate session string by `Phone Number` not by bot token and use the `pyrofork` mode.
+#### Question 1: Is a session string required in Surf-TG?
 
-**Question 2: How are posts updated on the web when using cache?**
+**Answer:** No, it is not required.
+
+#### Question 2: I am using Surf-TG without a session string, but my channel files are not showing on the web.
+
+**Answer:** To initially index your files, use the `/index` command in `AUTH_CHANNEL`. This command stores all your files in the database. Please ensure that you use the `/index` command only in one channel at a time. Once the channel indexing is complete, you can proceed to index the next channel.
+
+#### Question 3: Do I need to use the `/index` command every time the bot restarts or is deployed again?
+
+**Answer:** No, whether you restart the bot or deploy it again, you don't need to perform initial indexing unless you change the database.
+
+#### Question 4: Do I have to use the `/index` command every time I upload a file to the channel to index it?
+
+**Answer:** No, the `/index` command is only used once initially. Subsequently, any files you send will automatically be stored in the database.
+
+#### Question 5: When will be the cache system work?
+**Answer:** It work only when you use the `Session String.`
+
+#### Question 6: How are posts updated on the web when using Session String?
 
 **Answer:** Login with `ADMIN_USERNAME` and `ADMIN_PASSWORD`, then clicking the reload option in the Homepage navbar clears all channel caches, to showing new posts. To clear a specific channel's cache, open the channel and click its reload option.
 
-**Question 3: How to change theme and add/remove Channel without restart?**
+#### Question 7: How to change theme and add/remove Channel without restart?
 
 **Answer:** Login with `ADMIN_USERNAME` and `ADMIN_PASSWORD`, then clicking the Edit option in the Homepage navbar from there you can change theme and add/remove channel. Make sure that channel must be seperated by `,`
 
-#### Question 4: Can anyone create or edit folders/files in Playlist Creator?
+#### Question 8: Can anyone create or edit folders/files in Playlist Creator?
 
-Answer: No, only admins with `ADMIN_USERNAME` and `ADMIN_PASSWORD` can log in to Playlist Creator.
+**Answer:** No, only admins with `ADMIN_USERNAME` and `ADMIN_PASSWORD` can log in to Playlist Creator.
 
-#### Question 5: If i delete the mongoDb database then my playlist also deleted?
+#### Question 9: If i delete the mongoDb database then my playlist also deleted?
 
-Answer: Yes, Your all the playlist will be deleted.
+**Answer:** Yes, Your all the playlist will be deleted.
 
-#### Question 6: If i delete the file from `AUTH_CHANNEL` still then it will be played in Surf-TG?
+#### Question 10: If i delete the file from `AUTH_CHANNEL` still then it will be played in Surf-TG?
 
-Answer: No, Once the file is deleted it will be no more playable.
+**Answer:** No, Once the file is deleted it will be no more playable.
 
 ## Contributing
 

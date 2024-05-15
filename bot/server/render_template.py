@@ -1,3 +1,4 @@
+import re
 from aiofiles import open as aiopen
 from os import path as ospath
 
@@ -60,6 +61,9 @@ async def render_page(id, secure_hash, is_admin=False, html='', playlist='', dat
             raise InvalidHash
         filename, tag, size = file_data.file_name, file_data.mime_type.split(
             '/')[0].strip(), get_readable_file_size(file_data.file_size)
+        if filename is None:
+            filename = "Proper Filename is Missing"
+        filename = re.sub(r'[,|_\',]', ' ', filename)
         if tag == 'video':
             async with aiopen(ospath.join(tpath, 'video.html')) as r:
                 poster = f"/api/thumb/{chat_id}?id={id}"
