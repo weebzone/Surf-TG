@@ -10,17 +10,13 @@ from asyncio import gather
 db = Database()
 
 
-message_cache = {}
-
 async def fetch_message(chat_id, message_id):
-    if message_id in message_cache:
-        return message_cache[message_id]
     try:
         message = await StreamBot.get_messages(chat_id, message_id)
-        message_cache[message_id] = message
         return message
     except Exception as e:
         return None
+
 
 async def get_messages(chat_id, first_message_id, last_message_id, batch_size=50):
     messages = []
