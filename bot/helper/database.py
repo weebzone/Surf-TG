@@ -10,6 +10,7 @@ class Database:
         self.db = self.mongo_client["surftg"]
         self.collection = self.db["playlist"]
         self.config = self.db["config"]
+        self.files = self.db["files"]
 
     async def create_folder(self, parent_id, folder_name, thumbnail):
         folder = {"parent_folder": parent_id, "name": folder_name,
@@ -58,7 +59,7 @@ class Database:
         query = {"parent_folder": parent_id, "type": "file"}
         offset = (int(page) - 1) * per_page
         return list(self.collection.find(query).sort(
-            '_id', DESCENDING).skip(offset).limit(per_page))
+            'file_id', DESCENDING).skip(offset).limit(per_page))
 
     async def get_info(self, id):
         query = {'_id': ObjectId(id)}
@@ -74,14 +75,15 @@ class Database:
         query = {'type': 'file', 'parent_folder': id, 'name': regex_query}
         offset = (int(page) - 1) * per_page
         mydoc = self.collection.find(query).sort(
-            '_id', DESCENDING).skip(offset).limit(per_page)
+            'file_id', DESCENDING).skip(offset).limit(per_page)
         return list(mydoc)
-    
+
     async def update_config(self, theme, auth_channel):
         bot_id = Telegram.BOT_TOKEN.split(":", 1)[0]
         config = self.config.find_one({"_id": bot_id})
         if config is None:
-            result = self.config.insert_one({"_id": bot_id, "theme": theme, "auth_channel": auth_channel})
+            result = self.config.insert_one(
+                {"_id": bot_id, "theme": theme, "auth_channel": auth_channel})
             return result.inserted_id is not None
         else:
             result = self.config.update_one({"_id": bot_id}, {
@@ -91,7 +93,32 @@ class Database:
     async def get_variable(self, key):
         bot_id = Telegram.BOT_TOKEN.split(":", 1)[0]
         config = self.config.find_one({"_id": bot_id})
-        if config is not None:
-            return config.get(key)
-        else:
-            return None
+        return config.get(key) if config is not None else None
+
+    async def list_tgfiles(self, id, page=1, per_page=50):
+        query = {'chat_id': id}
+        offset = (int(page) - 1) * per_page
+        mydoc = self.files.find(query).sort(
+            'msg_id', DESCENDING).skip(offset).limit(per_page)
+        return list(mydoc)
+
+    async def add_tgfiles(self, chat_id, file_id, hash, name, size, file_type):
+        if fetch_old := self.files.find_one({"chat_id": chat_id, "hash": hash}):
+            return
+        file = {"chat_id": chat_id, "msg_id": file_id,
+                "hash": hash, "title": name, "size": size, "type": file_type}
+        self.files.insert_one(file)
+
+
+    async def search_tgfiles(self, id, query, page=1, per_page=50):
+        words = query.split()
+        regex_query = {'$regex': '.*' +
+                       '.*'.join(words) + '.*', '$options': 'i'}
+        query = {'chat_id': id, 'title': regex_query}
+        offset = (int(page) - 1) * per_page
+        mydoc = self.files.find(query).sort(
+            'msg_id', DESCENDING).skip(offset).limit(per_page)
+        return list(mydoc)
+    
+    async def add_btgfiles(self, data):
+        result = self.files.insert_many(data)

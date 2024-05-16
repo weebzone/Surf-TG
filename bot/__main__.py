@@ -16,11 +16,13 @@ async def start_services():
     LOGGER.info(f'Initializing Surf-TG v-{__version__}')
     await asleep(1.2)
     
-    await gather(StreamBot.start(), UserBot.start())
+    await StreamBot.start()
     StreamBot.username = StreamBot.me.username
-    LOGGER.info(f"Bot Client : {StreamBot.username}")
-    UserBot.username = UserBot.me.username or UserBot.me.first_name or UserBot.me.id
-    LOGGER.info(f"User Client : {UserBot.username}")
+    LOGGER.info(f"Bot Client : [@{StreamBot.username}]")
+    if len(Telegram.SESSION_STRING) != 0:
+        await UserBot.start()
+        UserBot.username = UserBot.me.username or UserBot.me.first_name or UserBot.me.id
+        LOGGER.info(f"User Client : {UserBot.username}")
     
     await asleep(1.2)
     LOGGER.info("Initializing Multi Clients")
@@ -38,17 +40,21 @@ async def start_services():
     await server.setup()
     await web.TCPSite(server, '0.0.0.0', Telegram.PORT).start()
 
+    LOGGER.info("Surf-TG Started Revolving !")
     await idle()
 
 async def stop_clients():
-    await gather(StreamBot.stop(), UserBot.stop())
+    await StreamBot.stop()
+    if len(Telegram.SESSION_STRING) != 0:
+        await UserBot.stop()
+
 
 if __name__ == '__main__':
     try:
         loop.run_until_complete(start_services())
     except KeyboardInterrupt:
         LOGGER.info('Service Stopping...')
-    except Exception as err:
+    except Exception:
         LOGGER.error(format_exc())
     finally:
         loop.run_until_complete(stop_clients())
