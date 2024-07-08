@@ -3,7 +3,7 @@ version: "3.9"
 services:
   app:
     build: .
-    command: bash surf-tg.sh
+    command: /bin/sh surf-tg.sh
     restart: on-failure
     ports:
       - "8080:8080"
