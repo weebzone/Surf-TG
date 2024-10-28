@@ -350,7 +350,7 @@ async def stream_handler_watch(request: web.Request):
         return web.HTTPFound('/login')
 
 
-@routes.get('/{chat_id}/video.mp4', allow_head=True)
+@routes.get('/{chat_id}/{encoded_name}', allow_head=True)
 async def stream_handler(request: web.Request):
     try:
         chat_id = request.match_info['chat_id']
