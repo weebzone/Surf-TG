@@ -1,6 +1,7 @@
 from pymongo import DESCENDING, MongoClient
 from bson import ObjectId
 from bot.config import Telegram
+import re
 
 
 class Database:
@@ -36,9 +37,9 @@ class Database:
         return result.modified_count > 0
 
     async def search_DbFolder(self, query):
-        words = query.split()
-        regex_query = {'$regex': '.*' +
-                       '.*'.join(words) + '.*', '$options': 'i'}
+        words = re.findall(r'\w+', query.lower())
+        regex_pattern = '.*'.join(f'(?=.*{re.escape(word)})' for word in words)
+        regex_query = {'$regex': f'.*{regex_pattern}.*', '$options': 'i'}
         myquery = {'type': 'folder', 'name': regex_query}
         mydoc = self.collection.find(myquery).sort('_id', DESCENDING)
         return [{'_id': str(x['_id']), 'name': x['name']} for x in mydoc]
@@ -69,9 +70,9 @@ class Database:
             return None
 
     async def search_dbfiles(self, id, query, page=1, per_page=50):
-        words = query.split()
-        regex_query = {'$regex': '.*' +
-                       '.*'.join(words) + '.*', '$options': 'i'}
+        words = re.findall(r'\w+', query.lower())
+        regex_pattern = '.*'.join(f'(?=.*{re.escape(word)})' for word in words)
+        regex_query = {'$regex': f'.*{regex_pattern}.*', '$options': 'i'}
         query = {'type': 'file', 'parent_folder': id, 'name': regex_query}
         offset = (int(page) - 1) * per_page
         mydoc = self.collection.find(query).sort(
@@ -111,9 +112,9 @@ class Database:
 
 
     async def search_tgfiles(self, id, query, page=1, per_page=50):
-        words = query.split()
-        regex_query = {'$regex': '.*' +
-                       '.*'.join(words) + '.*', '$options': 'i'}
+        words = re.findall(r'\w+', query.lower())
+        regex_pattern = '.*'.join(f'(?=.*{re.escape(word)})' for word in words)
+        regex_query = {'$regex': f'.*{regex_pattern}.*', '$options': 'i'}
         query = {'chat_id': id, 'title': regex_query}
         offset = (int(page) - 1) * per_page
         mydoc = self.files.find(query).sort(
