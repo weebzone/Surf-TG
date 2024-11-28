@@ -28,4 +28,4 @@ COPY --from=build /usr/local/lib/python3.12/site-packages /usr/local/lib/python3
 
 COPY . .
 
-CMD ["/bin/sh", "surf-tg.sh"]
+CMD ["bash", "surf-tg.sh"]
